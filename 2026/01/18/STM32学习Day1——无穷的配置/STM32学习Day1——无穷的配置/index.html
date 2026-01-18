@@ -19,19 +19,23 @@
   <meta name="author" content="Imaginary_17">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一个关于技术与生活的博客">
+    <meta name="description" content="STM32学习Day1——无穷的配置环境第一关：Keil_v5安装与支持包最初，我也是想用江科协教程中附带的百度网盘链接下载Keil的，奈何网速太慢，最终选择了头铁到官网下载（此处埋雷一颗） 于是打开了官网：Keil_v5_ARM官网 一顿操作猛如虎，这时候一看教程：（什么叫做支持包安装） 没事，我自己去安装助手装也就有亿点点慢吧（指非科学上网几乎不动） 支持包装好了，现在该用keygen使用学习">
 <meta property="og:type" content="article">
 <meta property="og:title" content="STM32学习Day1——无穷的配置">
-<meta property="og:url" content="https://clever-max.github.io/2026/01/18/STM32%E5%AD%A6%E4%B9%A0Day1%E2%80%94%E2%80%94%E6%97%A0%E7%A9%B7%E7%9A%84%E9%85%8D%E7%BD%AE/index.html">
+<meta property="og:url" content="https://clever-max.github.io/2026/01/18/STM32%E5%AD%A6%E4%B9%A0Day1%E2%80%94%E2%80%94%E6%97%A0%E7%A9%B7%E7%9A%84%E9%85%8D%E7%BD%AE/STM32%E5%AD%A6%E4%B9%A0Day1%E2%80%94%E2%80%94%E6%97%A0%E7%A9%B7%E7%9A%84%E9%85%8D%E7%BD%AE/index.html">
 <meta property="og:site_name" content="Imaginary_17 的个人空间">
-<meta property="og:description" content="一个关于技术与生活的博客">
+<meta property="og:description" content="STM32学习Day1——无穷的配置环境第一关：Keil_v5安装与支持包最初，我也是想用江科协教程中附带的百度网盘链接下载Keil的，奈何网速太慢，最终选择了头铁到官网下载（此处埋雷一颗） 于是打开了官网：Keil_v5_ARM官网 一顿操作猛如虎，这时候一看教程：（什么叫做支持包安装） 没事，我自己去安装助手装也就有亿点点慢吧（指非科学上网几乎不动） 支持包装好了，现在该用keygen使用学习">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://clever-max.github.io/fbcd93fbeebf032214b78db0fb9b496d.png">
+<meta property="og:image" content="https://clever-max.github.io/793566d653b0c6950cfac2cbe130a069.png">
+<meta property="og:image" content="https://clever-max.github.io/742aad66de570a1c9d6a6aad23e378b2.png">
 <meta property="article:published_time" content="2026-01-18T15:53:16.000Z">
-<meta property="article:modified_time" content="2026-01-18T15:53:59.929Z">
+<meta property="article:modified_time" content="2026-01-18T16:37:55.142Z">
 <meta property="article:author" content="Imaginary_17">
 <meta property="article:tag" content="STM32">
 <meta property="article:tag" content="学习记录">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://clever-max.github.io/fbcd93fbeebf032214b78db0fb9b496d.png">
   
   
   
@@ -224,7 +228,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          265 字
         
       </span>
     
@@ -235,7 +239,7 @@
         
         
         
-          1 分钟
+          3 分钟
         
       </span>
     
@@ -277,7 +281,21 @@
             
               <div class="markdown-body">
                 
-                
+                <h1 id="STM32学习Day1——无穷的配置环境"><a href="#STM32学习Day1——无穷的配置环境" class="headerlink" title="STM32学习Day1——无穷的配置环境"></a>STM32学习Day1——无穷的配置环境</h1><h2 id="第一关：Keil-v5安装与支持包"><a href="#第一关：Keil-v5安装与支持包" class="headerlink" title="第一关：Keil_v5安装与支持包"></a>第一关：Keil_v5安装与支持包</h2><p>最初，我也是想用江科协教程中附带的百度网盘链接下载Keil的，奈何网速太慢，最终选择了头铁到官网下载（此处埋雷一颗）</p>
+<p>于是打开了官网：<br><a target="_blank" rel="noopener" href="https://www.keil.com/demo/eval/arm.htm">Keil_v5_ARM官网</a></p>
+<p>一顿操作猛如虎，这时候一看教程：<br><img src="/fbcd93fbeebf032214b78db0fb9b496d.png" srcset="/img/loading.gif" lazyload><br>（什么叫做支持包安装）</p>
+<p>没事，我自己去安装助手装<br><img src="/793566d653b0c6950cfac2cbe130a069.png" srcset="/img/loading.gif" lazyload><br>也就有亿点点慢吧（指非科学上网几乎不动）</p>
+<p>支持包装好了，现在该用keygen使用学习（daoban）软件了【强劲的8-bit音乐响起】</p>
+<p>然后是STlink与串口转USB两个驱动的安装，按部就班完成了</p>
+<h2 id="第二关：第一个Project的建立"><a href="#第二关：第一个Project的建立" class="headerlink" title="第二关：第一个Project的建立"></a>第二关：第一个Project的建立</h2><p>STM32开发方式</p>
+<ol>
+<li>寄存器</li>
+<li>标准库（库函数）</li>
+<li>HAL库</li>
+</ol>
+<p>教程使用标准库开发，下面是我的历程：</p>
+<p>看到up说要用库函数，迫不得已还是用超级慢的百度网盘下载了全套资料<br><img src="/742aad66de570a1c9d6a6aad23e378b2.png" srcset="/img/loading.gif" lazyload><br>打开Libraries找到了核心的CoreSupport&amp;DeviceSupport</p>
+
                 
               </div>
             
@@ -304,7 +322,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>STM32学习Day1——无穷的配置</div>
-      <div>https://clever-max.github.io/2026/01/18/STM32学习Day1——无穷的配置/</div>
+      <div>https://clever-max.github.io/2026/01/18/STM32学习Day1——无穷的配置/STM32学习Day1——无穷的配置/</div>
     </div>
     <div class="license-meta">
       

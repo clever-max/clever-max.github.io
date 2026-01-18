@@ -5,10 +5,10 @@
   
   <entry>
     <title>STM32学习Day1——无穷的配置</title>
-    <link href="/2026/01/18/STM32%E5%AD%A6%E4%B9%A0Day1%E2%80%94%E2%80%94%E6%97%A0%E7%A9%B7%E7%9A%84%E9%85%8D%E7%BD%AE/"/>
-    <url>/2026/01/18/STM32%E5%AD%A6%E4%B9%A0Day1%E2%80%94%E2%80%94%E6%97%A0%E7%A9%B7%E7%9A%84%E9%85%8D%E7%BD%AE/</url>
+    <link href="/2026/01/18/STM32%E5%AD%A6%E4%B9%A0Day1%E2%80%94%E2%80%94%E6%97%A0%E7%A9%B7%E7%9A%84%E9%85%8D%E7%BD%AE/STM32%E5%AD%A6%E4%B9%A0Day1%E2%80%94%E2%80%94%E6%97%A0%E7%A9%B7%E7%9A%84%E9%85%8D%E7%BD%AE/"/>
+    <url>/2026/01/18/STM32%E5%AD%A6%E4%B9%A0Day1%E2%80%94%E2%80%94%E6%97%A0%E7%A9%B7%E7%9A%84%E9%85%8D%E7%BD%AE/STM32%E5%AD%A6%E4%B9%A0Day1%E2%80%94%E2%80%94%E6%97%A0%E7%A9%B7%E7%9A%84%E9%85%8D%E7%BD%AE/</url>
     
-    <content type="html"><![CDATA[]]></content>
+    <content type="html"><![CDATA[<h1 id="STM32学习Day1——无穷的配置环境"><a href="#STM32学习Day1——无穷的配置环境" class="headerlink" title="STM32学习Day1——无穷的配置环境"></a>STM32学习Day1——无穷的配置环境</h1><h2 id="第一关：Keil-v5安装与支持包"><a href="#第一关：Keil-v5安装与支持包" class="headerlink" title="第一关：Keil_v5安装与支持包"></a>第一关：Keil_v5安装与支持包</h2><p>最初，我也是想用江科协教程中附带的百度网盘链接下载Keil的，奈何网速太慢，最终选择了头铁到官网下载（此处埋雷一颗）</p><p>于是打开了官网：<br><a href="https://www.keil.com/demo/eval/arm.htm">Keil_v5_ARM官网</a></p><p>一顿操作猛如虎，这时候一看教程：<br><img src="/fbcd93fbeebf032214b78db0fb9b496d.png"><br>（什么叫做支持包安装）</p><p>没事，我自己去安装助手装<br><img src="/793566d653b0c6950cfac2cbe130a069.png"><br>也就有亿点点慢吧（指非科学上网几乎不动）</p><p>支持包装好了，现在该用keygen使用学习（daoban）软件了【强劲的8-bit音乐响起】</p><p>然后是STlink与串口转USB两个驱动的安装，按部就班完成了</p><h2 id="第二关：第一个Project的建立"><a href="#第二关：第一个Project的建立" class="headerlink" title="第二关：第一个Project的建立"></a>第二关：第一个Project的建立</h2><p>STM32开发方式</p><ol><li>寄存器</li><li>标准库（库函数）</li><li>HAL库</li></ol><p>教程使用标准库开发，下面是我的历程：</p><p>看到up说要用库函数，迫不得已还是用超级慢的百度网盘下载了全套资料<br><img src="/742aad66de570a1c9d6a6aad23e378b2.png"><br>打开Libraries找到了核心的CoreSupport&amp;DeviceSupport</p>]]></content>
     
     
     
