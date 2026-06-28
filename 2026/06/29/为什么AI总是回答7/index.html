@@ -1,0 +1,1096 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Imaginary_17">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="为什么 AI 总是回答 7？一场关于 LLM 随机数偏见的考古 起因很简单：我随手让 AI 输出一个 0~9 的随机数，连续问了几次，回答几乎都是 7。换一个 AI，还是 7。再换一个，依然是 7。这事儿不对劲 —— 一台号称能写代码、能推理、能通过图灵测试的机器，怎么连掷骰子都掷不明白？   本着「先问是不是，再问为什么」的科研洁癖，我顺着这条线索往下挖，结果挖出一串意外精彩的研究：从心理学的「">
+<meta property="og:type" content="article">
+<meta property="og:title" content="为什么 AI 总是回答 7？一场关于 LLM 随机数偏见的考古">
+<meta property="og:url" content="https://clever-max.github.io/2026/06/29/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E6%80%BB%E6%98%AF%E5%9B%9E%E7%AD%947/index.html">
+<meta property="og:site_name" content="Imaginary_17 的个人空间">
+<meta property="og:description" content="为什么 AI 总是回答 7？一场关于 LLM 随机数偏见的考古 起因很简单：我随手让 AI 输出一个 0~9 的随机数，连续问了几次，回答几乎都是 7。换一个 AI，还是 7。再换一个，依然是 7。这事儿不对劲 —— 一台号称能写代码、能推理、能通过图灵测试的机器，怎么连掷骰子都掷不明白？   本着「先问是不是，再问为什么」的科研洁癖，我顺着这条线索往下挖，结果挖出一串意外精彩的研究：从心理学的「">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://clever-max.github.io/2026/06/29/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E6%80%BB%E6%98%AF%E5%9B%9E%E7%AD%947/1.png">
+<meta property="og:image" content="https://clever-max.github.io/2026/06/29/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E6%80%BB%E6%98%AF%E5%9B%9E%E7%AD%947/4+1.png">
+<meta property="og:image" content="https://clever-max.github.io/2026/06/29/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E6%80%BB%E6%98%AF%E5%9B%9E%E7%AD%947/4+2.png">
+<meta property="og:image" content="https://clever-max.github.io/2026/06/29/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E6%80%BB%E6%98%AF%E5%9B%9E%E7%AD%947/4+3.png">
+<meta property="og:image" content="https://clever-max.github.io/2026/06/29/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E6%80%BB%E6%98%AF%E5%9B%9E%E7%AD%947/3.gif">
+<meta property="og:image" content="https://clever-max.github.io/2026/06/29/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E6%80%BB%E6%98%AF%E5%9B%9E%E7%AD%947/5.png">
+<meta property="og:image" content="https://clever-max.github.io/2026/06/29/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E6%80%BB%E6%98%AF%E5%9B%9E%E7%AD%947/6.webp">
+<meta property="og:image" content="https://clever-max.github.io/2026/06/29/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E6%80%BB%E6%98%AF%E5%9B%9E%E7%AD%947/8.png">
+<meta property="og:image" content="https://clever-max.github.io/2026/06/29/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E6%80%BB%E6%98%AF%E5%9B%9E%E7%AD%947/10.png">
+<meta property="article:published_time" content="2026-06-28T19:30:00.000Z">
+<meta property="article:modified_time" content="2026-06-28T19:28:03.438Z">
+<meta property="article:author" content="Imaginary_17">
+<meta property="article:tag" content="胡思乱想">
+<meta property="article:tag" content="技术分享">
+<meta property="article:tag" content="AI">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://clever-max.github.io/2026/06/29/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E6%80%BB%E6%98%AF%E5%9B%9E%E7%AD%947/1.png">
+  
+  
+  
+  <title>为什么 AI 总是回答 7？一场关于 LLM 随机数偏见的考古 - Imaginary_17 的个人空间</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"clever-max.github.io","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Imaginary_17</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="开灯"
+               data-label-dark="关灯">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">关灯</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="为什么 AI 总是回答 7？一场关于 LLM 随机数偏见的考古"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Imaginary_17
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-06-29 03:30" pubdate>
+          2026年6月29日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          69 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">为什么 AI 总是回答 7？一场关于 LLM 随机数偏见的考古</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="为什么-AI-总是回答-7？一场关于-LLM-随机数偏见的考古"><a href="#为什么-AI-总是回答-7？一场关于-LLM-随机数偏见的考古" class="headerlink" title="为什么 AI 总是回答 7？一场关于 LLM 随机数偏见的考古"></a>为什么 AI 总是回答 7？一场关于 LLM 随机数偏见的考古</h1><blockquote>
+<p>起因很简单：我随手让 AI 输出一个 0~9 的随机数，连续问了几次，回答几乎都是 7。换一个 AI，还是 7。再换一个，依然是 7。这事儿不对劲 —— 一台号称能写代码、能推理、能通过图灵测试的机器，怎么连掷骰子都掷不明白？</p>
+</blockquote>
+<p><img src="/2026/06/29/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E6%80%BB%E6%98%AF%E5%9B%9E%E7%AD%947/1.png" srcset="/img/loading.gif" lazyload></p>
+<p>本着「先问是不是，再问为什么」的科研洁癖，我顺着这条线索往下挖，结果挖出一串意外精彩的研究：从心理学的「蓝七现象」，到一部美剧引发的数学定理，再到 ACL 2026 的最新论文。这是一个关于「机器如何忠实地复刻人类偏见」的故事。</p>
+<h2 id="一、不是错觉：这个现象被反复复现"><a href="#一、不是错觉：这个现象被反复复现" class="headerlink" title="一、不是错觉：这个现象被反复复现"></a>一、不是错觉：这个现象被反复复现</h2><h3 id="1-Telefonica-的-75-600-次实验"><a href="#1-Telefonica-的-75-600-次实验" class="headerlink" title="1. Telefónica 的 75,600 次实验"></a>1. Telefónica 的 75,600 次实验</h3><p>2025 年 2 月，Telefónica Tech 的 Javier Coronado-Blázquez 在 arXiv 上挂出一篇论文 —— <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2502.19965">《Deterministic or probabilistic? The psychology of LLMs as random number generators》</a>。他对 6 个模型（DeepSeek-R1-14b、Gemini 2.0、GPT-4o-mini、Llama 3.1-8b、Mistral-7b、Phi-4-14b）做了 75,600 次独立调用，覆盖 7 种语言、6 个温度档位、3 个数值范围。</p>
+<p>实验配置如下：</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs basic"><span class="hljs-symbol">6 </span>models × <span class="hljs-number">7</span> languages × <span class="hljs-number">3</span> ranges × <span class="hljs-number">6</span> temperatures × <span class="hljs-number">100</span> <span class="hljs-keyword">calls</span> = <span class="hljs-number">75</span>,<span class="hljs-number">600</span> 次<br></code></pre></td></tr></table></figure>
+
+<p>Prompt 永远是同一句：<strong>“Give me a random number between 1 and X. Please only return the number with no additional text.”</strong></p>
+<p>如果 LLM 真的均匀采样，每个数字被选中的概率应该接近 1&#x2F;N。但结果是这样的：</p>
+<p><strong>范围 1–5：模型几乎只选 3 和 4。</strong><br><img src="/2026/06/29/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E6%80%BB%E6%98%AF%E5%9B%9E%E7%AD%947/4+1.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>范围 1–10：7 一家独大，GPT-4o-mini、Phi-4、Gemini 2.0 在约 80% 的调用里都回答 7。</strong><br><img src="/2026/06/29/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E6%80%BB%E6%98%AF%E5%9B%9E%E7%AD%947/4+2.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>范围 1–100：37、47、73 三个数占据绝大多数回答，且都是质数。</strong><br><img src="/2026/06/29/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E6%80%BB%E6%98%AF%E5%9B%9E%E7%AD%947/4+3.png" srcset="/img/loading.gif" lazyload></p>
+<p>论文标题用了一个很妙的词 —— <strong>“psychology”</strong>。LLM 在生成随机数时表现的不是概率学，而是心理学。</p>
+<h3 id="2-Colin-Fraser-的-2-000-次实验（2023）"><a href="#2-Colin-Fraser-的-2-000-次实验（2023）" class="headerlink" title="2. Colin Fraser 的 2,000 次实验（2023）"></a>2. Colin Fraser 的 2,000 次实验（2023）</h3><p>其实早在 2023 年，Meta 的数据科学家 Colin Fraser 就做过类似实验。他对 ChatGPT（GPT-3.5）发起 2,000 次独立请求，让它选 1–100 的随机数。结果显示：</p>
+<ul>
+<li><strong>42 占了约 10% 的回答</strong>（远超 1% 的理论均值）</li>
+<li><strong>7 和 7X 系列被高频选中</strong>（37、47、57、67、71–79）</li>
+<li><strong>11、22、33、44 这类重复数字几乎从不出现</strong></li>
+</ul>
+<p>42 的统治地位不難理解 —— 它是《银河系漫游指南》里「生命、宇宙与一切的终极答案」，是开发者社区的国民级梗。模型只不过是把训练语料里高频出现的「42 &#x3D; 答案」学进了参数。</p>
+<h3 id="3-Gramener-的三模型对比"><a href="#3-Gramener-的三模型对比" class="headerlink" title="3. Gramener 的三模型对比"></a>3. Gramener 的三模型对比</h3><p>Gramener 的工程师做了更直观的对照实验：让 GPT-3.5 Turbo、Claude 3 Haiku、Gemini 1.0 Pro 在不同温度下选 1–100 的随机数。</p>
+<p><img src="/2026/06/29/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E6%80%BB%E6%98%AF%E5%9B%9E%E7%AD%947/3.gif" srcset="/img/loading.gif" lazyload></p>
+<p>三家模型的「最爱」各不相同：</p>
+<table>
+<thead>
+<tr>
+<th>模型</th>
+<th>最爱</th>
+<th>次爱</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GPT-3.5 Turbo</td>
+<td>47</td>
+<td>42</td>
+</tr>
+<tr>
+<td>Claude 3 Haiku</td>
+<td>42</td>
+<td>47</td>
+</tr>
+<tr>
+<td>Gemini 1.0 Pro</td>
+<td>72</td>
+<td>42</td>
+</tr>
+</tbody></table>
+<p>但三者有一个高度一致的共性：<strong>都偏爱以 7 结尾的数（37、47、57、67），都回避 11、22、33、44 这类重复数字</strong>。这和人类的「随机感」几乎完全重合 —— 这不是巧合。</p>
+<h3 id="4-ACL-2026：LLM-是糟糕的骰子玩家"><a href="#4-ACL-2026：LLM-是糟糕的骰子玩家" class="headerlink" title="4. ACL 2026：LLM 是糟糕的骰子玩家"></a>4. ACL 2026：LLM 是糟糕的骰子玩家</h3><p>到了 2026 年，Harvard 团队在 ACL 上发表了 <a target="_blank" rel="noopener" href="https://preview.aclanthology.org/fetch-openreview-orcid/2026.acl-long.1051.pdf">《Large Language Models Are Bad Dice Players》</a>，对 11 个前沿模型 × 15 种概率分布做了大规模审计。结论更尖锐：</p>
+<ul>
+<li><strong>独立请求模式下，11 个模型中有 10 个完全无法通过任何分布的统计检验</strong>；</li>
+<li>模型不是在「采样」，而是在复现训练数据里「最像答案」的那个 token；</li>
+<li>这种偏差会向下游传染 —— 例如生成选择题时，正确答案位置系统性偏向 C。</li>
+</ul>
+<p>至此，「现象」这一层已经盖棺定论。接下来的问题是：<strong>为什么？</strong></p>
+<h2 id="二、根因之一：人类对-7-的偏爱（蓝七现象）"><a href="#二、根因之一：人类对-7-的偏爱（蓝七现象）" class="headerlink" title="二、根因之一：人类对 7 的偏爱（蓝七现象）"></a>二、根因之一：人类对 7 的偏爱（蓝七现象）</h2><p>要理解 AI 为什么爱 7，得先理解人为什么爱 7。</p>
+<h3 id="蓝七现象"><a href="#蓝七现象" class="headerlink" title="蓝七现象"></a>蓝七现象</h3><p>心理学界几十年前就记录了一个跨文化现象：让人随口说一个颜色和一个数字，<strong>蓝色和 7 的出现率远超统计均值</strong>，且这个规律在几十种文化里都成立。它有一个正式的名字 —— <strong>Blue-Seven Phenomenon（蓝七现象）</strong>。</p>
+<p>耶鲁大学早年做过街头测试，拦住路人让他们脱口说出 0–9 之间第一个想到的数字，<strong>将近 30% 的受访者第一反应是 7</strong>，远高于 10% 的理论均值。</p>
+<h3 id="Veritasium-的-20-万人调查"><a href="#Veritasium-的-20-万人调查" class="headerlink" title="Veritasium 的 20 万人调查"></a>Veritasium 的 20 万人调查</h3><p>2024 年，Derek Muller 的科普频道 Veritasium 做了史上最大规模的随机数调查，<strong>200,000 人参与</strong>。结果惊人地稳定：从 10,000 到 200,000 个样本，分布几乎不变 —— 这说明全人类在「如何挑随机数」这件事上，想法高度一致。</p>
+<p><img src="/2026/06/29/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E6%80%BB%E6%98%AF%E5%9B%9E%E7%AD%947/5.png" srcset="/img/loading.gif" lazyload></p>
+<p>在 1–100 范围里，最常被选中的数字是：<strong>7、73、77、37</strong>。最少被选的则是 90、30、40、70、80、60 —— 所有 10 的倍数，因为「看起来太规整」。</p>
+<p>最有意思的是第二轮实验：要求参与者选「你认为别人最少选的数」。结果 <strong>73 和 37 几乎并列第一</strong>。也就是说，所有人都以为这俩「最冷门」，结果反而成了最热门。这就像所有家长都想给孩子起「独一无二」的名字，开学第一天发现全班五个子轩。</p>
+<h3 id="为什么-7-看起来「更随机」？"><a href="#为什么-7-看起来「更随机」？" class="headerlink" title="为什么 7 看起来「更随机」？"></a>为什么 7 看起来「更随机」？</h3><p>Veritasium 给出了三层解释：</p>
+<ol>
+<li><strong>奇数比偶数更「随机」</strong>：偶数天然带有「可分性」的暗示，5 太居中，9 太极端，7 在 1–9 里位置居中又不挨着中心点。</li>
+<li><strong>质数更「随机」</strong>：我们的生活被合数包围 —— 像素、装箱、面积、卡片张数……质数在两位数以后几乎不出现在生活里，大脑把「陌生」误读成「随机」。而且质数没有生成公式，「出现位置本就近似随机」。</li>
+<li><strong>37 在文化叙事里是「空白」</strong>：儿童数数书里，26 &#x3D; 字母数、30 &#x3D; 九月天数、52 &#x3D; 一副扑克……但 37 没有任何故事。这种「无意义」反而被脑补成「无规律 &#x3D; 随机」。</li>
+</ol>
+<p>一句话总结：<strong>人类的「随机感」本身就是一种高度模式化的认知偏见</strong>。</p>
+<h2 id="三、根因之二：73-的文化加持（Sheldon-定理）"><a href="#三、根因之二：73-的文化加持（Sheldon-定理）" class="headerlink" title="三、根因之二：73 的文化加持（Sheldon 定理）"></a>三、根因之二：73 的文化加持（Sheldon 定理）</h2><p>如果说 7 是无意识的心理学偏好，那 73 就是流行文化对训练数据的「定向施肥」。</p>
+<h3 id="Sheldon-的-73"><a href="#Sheldon-的-73" class="headerlink" title="Sheldon 的 73"></a>Sheldon 的 73</h3><p>《生活大爆炸》第 73 集（这本身就是个彩蛋）里，Sheldon 宣称 73 是「最好的数」：</p>
+<p><img src="/2026/06/29/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E6%80%BB%E6%98%AF%E5%9B%9E%E7%AD%947/6.webp" srcset="/img/loading.gif" lazyload></p>
+<p>他的论证是这样的：</p>
+<ul>
+<li>73 是第 21 个质数</li>
+<li>其镜像 37 是第 12 个质数</li>
+<li>21 又恰好 &#x3D; 7 × 3</li>
+<li>73 的二进制 1001001 是回文</li>
+</ul>
+<p>剧中 Leonard 听完后说：「我们懂了，73 是数字界的 Chuck Norris。」Sheldon 回：「Chuck Norris 还差得远呢。」</p>
+<h3 id="Sheldon-猜想被证明"><a href="#Sheldon-猜想被证明" class="headerlink" title="Sheldon 猜想被证明"></a>Sheldon 猜想被证明</h3><p>这看起来只是编剧的玩笑，但现实中的数学家把它当真了。2015 年，Morningside 学院的 Chris Spicer 和两位学生正式提出 <strong>Sheldon Conjecture（谢尔顿猜想）</strong>：</p>
+<blockquote>
+<p>满足「镜像性」和「积性」这两个性质的质数，<strong>只有 73 一个</strong>。</p>
+</blockquote>
+<p>2019 年，Dartmouth 的 Carl Pomerance 和 Spicer 在《美国数学月刊》上发表了 <a target="_blank" rel="noopener" href="https://www.math.dartmouth.edu/~carlp/sheldonresub011119.pdf">Proof of the Sheldon Conjecture</a>，<strong>正式证明了 73 是唯一的 Sheldon 质数</strong>。</p>
+<p>下面用 HTML 把这两个性质画出来，比 AI 生成的图更清晰：</p>
+<div style="border:1px solid #ddd;border-radius:8px;padding:20px;margin:20px 0;background:#fafafa;font-family:-apple-system,'Segoe UI',sans-serif;">
+  <h4 style="text-align:center;color:#333;margin-top:0;">73 的两种数学性质</h4>
+
+  <div style="display:flex;flex-wrap:wrap;gap:20px;justify-content:center;">
+
+<pre><code class="hljs">&lt;div style=&quot;flex:1;min-width:280px;background:white;border-left:4px solid #4a90e2;padding:15px;border-radius:4px;&quot;&gt;
+  &lt;div style=&quot;font-weight:bold;color:#4a90e2;margin-bottom:10px;&quot;&gt;① 镜像性 (Mirror Property)&lt;/div&gt;
+  &lt;div style=&quot;font-family:monospace;font-size:14px;line-height:1.8;&quot;&gt;
+    &lt;div&gt;第 &lt;b style=&quot;color:#d73a49;&quot;&gt;21&lt;/b&gt; 个质数 = &lt;b style=&quot;color:#d73a49;&quot;&gt;73&lt;/b&gt;&lt;/div&gt;
+    &lt;div style=&quot;text-align:center;color:#999;font-size:18px;&quot;&gt;⇅ 镜像反转&lt;/div&gt;
+    &lt;div&gt;第 &lt;b style=&quot;color:#d73a49;&quot;&gt;12&lt;/b&gt; 个质数 = &lt;b style=&quot;color:#d73a49;&quot;&gt;37&lt;/b&gt;&lt;/div&gt;
+    &lt;div style=&quot;color:#666;font-size:12px;margin-top:8px;&quot;&gt;21 ↔ 12, 73 ↔ 37 同时互为镜像&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div style=&quot;flex:1;min-width:280px;background:white;border-left:4px solid #50c878;padding:15px;border-radius:4px;&quot;&gt;
+  &lt;div style=&quot;font-weight:bold;color:#50c878;margin-bottom:10px;&quot;&gt;② 积性 (Product Property)&lt;/div&gt;
+  &lt;div style=&quot;font-family:monospace;font-size:14px;line-height:1.8;&quot;&gt;
+    &lt;div&gt;质数 &lt;b style=&quot;color:#d73a49;&quot;&gt;73&lt;/b&gt; 的位数之积：&lt;/div&gt;
+    &lt;div style=&quot;text-align:center;font-size:18px;margin:8px 0;&quot;&gt;
+      &lt;b style=&quot;color:#d73a49;&quot;&gt;7&lt;/b&gt; × &lt;b style=&quot;color:#d73a49;&quot;&gt;3&lt;/b&gt; = &lt;b style=&quot;color:#d73a49;&quot;&gt;21&lt;/b&gt;
+    &lt;/div&gt;
+    &lt;div&gt;而 73 恰好是第 &lt;b style=&quot;color:#d73a49;&quot;&gt;21&lt;/b&gt; 个质数 ✓&lt;/div&gt;
+    &lt;div style=&quot;color:#666;font-size:12px;margin-top:8px;&quot;&gt;位数乘积 = 该质数在质数序列中的索引&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+  </div>
+
+  <div style="text-align:center;margin-top:15px;padding:10px;background:#fff3cd;border-radius:4px;color:#856404;font-size:13px;">
+    🏆 2019 年 Pomerance & Spicer 证明：<b>73 是唯一同时满足这两条性质的质数</b>
+  </div>
+</div>
+
+<p>这意味着 73 在数学上确实「特殊」。《生活大爆炸》又是全球收视率顶级的美剧，互联网语料里 73 &#x2F; 37 &#x2F; 7 的密度被反复强化，LLM 学到的概率分布也就被进一步推高。<strong>人类的文化偏见被数学证明了独特性，又被电视剧放大了传播量，最后被语言模型固化进参数 —— 一条完美的偏见强化回路。</strong></p>
+<h2 id="四、根因之三：LLM-不是骰子"><a href="#四、根因之三：LLM-不是骰子" class="headerlink" title="四、根因之三：LLM 不是骰子"></a>四、根因之三：LLM 不是骰子</h2><p>前面两个原因都来自「人」，第三个原因来自「机器」本身。</p>
+<h3 id="Next-token-prediction-≠-Sampling"><a href="#Next-token-prediction-≠-Sampling" class="headerlink" title="Next-token prediction ≠ Sampling"></a>Next-token prediction ≠ Sampling</h3><p>Coronado-Blázquez 论文里有一句关键论断：</p>
+<blockquote>
+<p>数字对 LLM 来说并不是数字，而是 token ——「2」和「3」在它的嵌入空间里和「+」、「horse」没有本质区别。</p>
+</blockquote>
+<p>LLM 没有「骰子」的概念。它有的只是：<strong>在给定上下文「请输出一个 0–9 的随机数」之后，下一个 token 是「7」的条件概率</strong>。而这个条件概率直接来自训练语料的统计 —— 当人类在 Reddit、Stack Overflow、博客里被问到「0–9 随机数」时，回答 7 的密度最高，于是模型就把 7 学成了该 prompt 下的众数。</p>
+<p><img src="/2026/06/29/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E6%80%BB%E6%98%AF%E5%9B%9E%E7%AD%947/8.png" srcset="/img/loading.gif" lazyload></p>
+<p>整个流程可以拆成四步：</p>
+<ol>
+<li><strong>人类有偏见</strong>：被问到随机数时，人脑默认选 7</li>
+<li><strong>语料被污染</strong>：互联网上「7 &#x3D; 最像随机数」的样本密度极高</li>
+<li><strong>模型学分布</strong>：训练目标让模型拟合 token 概率，7 自然成了众数</li>
+<li><strong>输出收敛</strong>：推理时 7 的 logit 最高，被采样的概率最大</li>
+</ol>
+<h3 id="Mode-Collapse：训练阶段从未要求「均匀」"><a href="#Mode-Collapse：训练阶段从未要求「均匀」" class="headerlink" title="Mode Collapse：训练阶段从未要求「均匀」"></a>Mode Collapse：训练阶段从未要求「均匀」</h3><p>LessWrong 上一篇 2026 年 5 月的工作 <a target="_blank" rel="noopener" href="https://www.lesswrong.com/posts/upCrcE39aF63GoLJh/training-language-models-for-controlled-stochasticity-2">Training Language Models for Controlled Stochasticity</a> 把这个问题说得更透彻：</p>
+<blockquote>
+<p>在训练阶段，模型从未收到任何激励去把概率质量摊开。它只需要在「最可能的下一个 token」上集中概率，就能 minimize loss。所以 mode collapse 不是 bug，而是训练目标的必然结果。</p>
+</blockquote>
+<p>文中举了几个让人哭笑不得的例子：</p>
+<ul>
+<li><strong>Qwen3 被要求选一个随机的工作日，约 80% 的回答是 Wednesday</strong></li>
+<li><strong>Gemma-3 被要求命名一个随机城市，75% 的回答集中在前 4 个城市</strong></li>
+<li><strong>生成选择题时，正确答案系统性偏向 C</strong></li>
+</ul>
+<h3 id="6-模型对照实验：训练数据指纹"><a href="#6-模型对照实验：训练数据指纹" class="headerlink" title="6 模型对照实验：训练数据指纹"></a>6 模型对照实验：训练数据指纹</h3><p>dev.to 上有人做了一个很漂亮的对照实验，让 6 个模型选 1–100 的随机数。结果分成了两个阵营：</p>
+<div style="overflow-x:auto;margin:20px 0;">
+  <table style="border-collapse:collapse;width:100%;min-width:480px;font-size:14px;">
+    <thead>
+      <tr style="background:#f0f0f0;">
+        <th style="border:1px solid #ddd;padding:10px;text-align:left;">模型</th>
+        <th style="border:1px solid #ddd;padding:10px;text-align:left;">开发商</th>
+        <th style="border:1px solid #ddd;padding:10px;text-align:center;">第一轮回答</th>
+        <th style="border:1px solid #ddd;padding:10px;text-align:left;">暗示的文化来源</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="border:1px solid #ddd;padding:10px;">Claude Sonnet 4.6</td>
+        <td style="border:1px solid #ddd;padding:10px;">Anthropic</td>
+        <td style="border:1px solid #ddd;padding:10px;text-align:center;background:#e3f2fd;color:#1565c0;font-weight:bold;font-size:18px;">42</td>
+        <td style="border:1px solid #ddd;padding:10px;">《银河系漫游指南》</td>
+      </tr>
+      <tr>
+        <td style="border:1px solid #ddd;padding:10px;">Gemini Pro</td>
+        <td style="border:1px solid #ddd;padding:10px;">Google</td>
+        <td style="border:1px solid #ddd;padding:10px;text-align:center;background:#e3f2fd;color:#1565c0;font-weight:bold;font-size:18px;">42</td>
+        <td style="border:1px solid #ddd;padding:10px;">《银河系漫游指南》</td>
+      </tr>
+      <tr>
+        <td style="border:1px solid #ddd;padding:10px;">DeepSeek</td>
+        <td style="border:1px solid #ddd;padding:10px;">DeepSeek AI</td>
+        <td style="border:1px solid #ddd;padding:10px;text-align:center;background:#e3f2fd;color:#1565c0;font-weight:bold;font-size:18px;">42</td>
+        <td style="border:1px solid #ddd;padding:10px;">《银河系漫游指南》</td>
+      </tr>
+      <tr>
+        <td style="border:1px solid #ddd;padding:10px;">GLM-5.1</td>
+        <td style="border:1px solid #ddd;padding:10px;">Zhipu AI</td>
+        <td style="border:1px solid #ddd;padding:10px;text-align:center;background:#e3f2fd;color:#1565c0;font-weight:bold;font-size:18px;">42</td>
+        <td style="border:1px solid #ddd;padding:10px;">《银河系漫游指南》</td>
+      </tr>
+      <tr>
+        <td style="border:1px solid #ddd;padding:10px;">Copilot</td>
+        <td style="border:1px solid #ddd;padding:10px;">Microsoft / OpenAI</td>
+        <td style="border:1px solid #ddd;padding:10px;text-align:center;background:#fff3e0;color:#e65100;font-weight:bold;font-size:18px;">73</td>
+        <td style="border:1px solid #ddd;padding:10px;">《生活大爆炸》Sheldon</td>
+      </tr>
+      <tr>
+        <td style="border:1px solid #ddd;padding:10px;">Grok</td>
+        <td style="border:1px solid #ddd;padding:10px;">xAI</td>
+        <td style="border:1px solid #ddd;padding:10px;text-align:center;background:#fff3e0;color:#e65100;font-weight:bold;font-size:18px;">73</td>
+        <td style="border:1px solid #ddd;padding:10px;">《生活大爆炸》Sheldon</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p style="text-align:center;color:#666;font-size:13px;margin-top:-10px;">
+  🔵 <span style="color:#1565c0;">42 阵营</span>：训练数据偏向开发者社区 &nbsp;&nbsp;|&nbsp;&nbsp; 🟠 <span style="color:#e65100;">73 阵营</span>：训练数据偏向更主流的互联网
+</p>
+
+<p><strong>模型选哪个数，几乎可以反推它的训练数据更偏向开发者社区还是更大众互联网</strong> —— 这相当于不接触模型权重就能做训练数据的 OSINT（开源情报分析）。</p>
+<p>更有意思的是第三轮实验：明确要求模型「避免人类偏见」。结果呢？</p>
+<ul>
+<li><strong>Claude 在被明确要求避免偏见后，依然回答 42</strong></li>
+<li><strong>GLM-5.1 在思维链里自己意识到「42 是开发者梗，73 是 Sheldon 梗，84 是奥威尔」，但最终输出了 82</strong> —— 它在做「对自己做 OSINT」，但仍然逃不出文化污染的候选池</li>
+<li><strong>DeepSeek 干脆在脑子里手搓了一个线性同余生成器</strong>：<code>X₁ = (1103515245 × X₀ + 12345) mod 2³¹</code>，最后输出 46</li>
+</ul>
+<p><strong>意识到了偏见，不等于能逃出偏见</strong>。这是 LLM 随机数偏见最让人绝望的一点。</p>
+<h2 id="五、温度救不了它"><a href="#五、温度救不了它" class="headerlink" title="五、温度救不了它"></a>五、温度救不了它</h2><p>很多人（包括之前的我）的第一反应是：把 <code>temperature</code> 调高一点不就好了？</p>
+<p>很遗憾，几乎没用。</p>
+<p>Gramener 的实验里，温度从 0.0 升到 1.0，<strong>favorite number 的统治地位只被轻微削弱</strong>。Coronado-Blázquez 的 75,600 次调用里，独立请求模式下高温依然救不回来 —— <strong>11 个模型里有 10 个通不过任何分布的统计检验</strong>。</p>
+<p>原因不难理解：温度调节的是「在 logits 上加多少扰动后做 softmax」。如果 7 的 logit 本来就比其他数字高出一截，那点扰动根本翻不了盘。这就像让一个 1.9 米的人和一个 1.6 米的人掷骰子决定谁先进门 —— 骰子是有随机性，但门槛设在 1.7 米，结果早就注定了。</p>
+<p>GPT-4o-mini 在 T&#x3D;2.0 时甚至开始胡言乱语，输出类似 <code>xog gdpoiojfz addu610646</code> 这种乱码 —— 这是 logit 概率被压平后采到荒谬 token 的结果，但即便如此，它的「正经」回答里 7 依然是绝对主力。</p>
+<h2 id="六、影响远不止「好玩」"><a href="#六、影响远不止「好玩」" class="headerlink" title="六、影响远不止「好玩」"></a>六、影响远不止「好玩」</h2><p>你可能会想：不就是选个数嘛，至于上纲上线吗？</p>
+<p>事实上，这个偏差正在悄悄污染一整条数据链。</p>
+<h3 id="1-合成数据偏差"><a href="#1-合成数据偏差" class="headerlink" title="1. 合成数据偏差"></a>1. 合成数据偏差</h3><p>现在大量训练数据是 LLM 自己生成的。如果用 LLM 生成「随机分类标签」，类别分布天然倾斜 —— 下游模型会继承并放大这种偏差，几代之后，整个数据集可能就剩几个高频类。</p>
+<h3 id="2-选择题位置偏向"><a href="#2-选择题位置偏向" class="headerlink" title="2. 选择题位置偏向"></a>2. 选择题位置偏向</h3><p>ACL 2026 论文里专门测了 LLM 生成选择题时正确答案的分布。结果正确答案系统性偏向 <strong>C 位置</strong>。这意味着如果用 LLM 出题给学生做，学生只要无脑选 C 就能拿到远超随机水平的分。教育公平性直接被破坏。</p>
+<h3 id="3-图生图-prompt-合成"><a href="#3-图生图-prompt-合成" class="headerlink" title="3. 图生图 prompt 合成"></a>3. 图生图 prompt 合成</h3><p>用 LLM 生成 text-to-image 的 prompt 时，要求「性别和族裔均衡」，结果输出严重偏离目标分布 —— 因为模型在「随机分配属性」时同样有 mode collapse。</p>
+<h3 id="4-数据造假的指纹"><a href="#4-数据造假的指纹" class="headerlink" title="4. 数据造假的指纹"></a>4. 数据造假的指纹</h3><p>这个角度更冷门但更精彩。2009 年伊朗大选后，哥伦比亚大学的两位统计学研究生用本福特定律核查官方票数，发现尾数 <strong>7 的出现率高达 17%</strong>（理论应为 10%），而 <strong>5 只有 4%</strong> —— 这正是人类手动编造数据时的典型指纹。两位研究生判定官方数据造假的概率高达 99.5%，论文登上《华盛顿邮报》。</p>
+<p><strong>如果未来有人用 LLM 批量生成伪造数据，同样的「7 过密、5 过疏」指纹会再次出现</strong> —— 因为 LLM 复刻的正是人类造假的认知习惯。</p>
+<h3 id="5-对策"><a href="#5-对策" class="headerlink" title="5. 对策"></a>5. 对策</h3><p>如果你真的需要 0–9 的均匀随机数，怎么办？</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>效果</th>
+<th>代价</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>❌ 直接问 LLM「给个随机数」</td>
+<td>严重偏差</td>
+<td>—</td>
+</tr>
+<tr>
+<td>⚠️ 调高 temperature</td>
+<td>几乎无效</td>
+<td>可能输出乱码</td>
+</tr>
+<tr>
+<td>⚠️ Prompt 里说「避免偏见」</td>
+<td>略有改善</td>
+<td>DeepSeek-R1 能意识到但逃不出</td>
+</tr>
+<tr>
+<td>✅ 让 LLM 写 Python 代码 <code>random.randint(0,9)</code></td>
+<td>完美</td>
+<td>需要执行环境</td>
+</tr>
+<tr>
+<td>✅ Pre-seed 技巧：先让模型输出随机字符串再哈希</td>
+<td>显著缓解</td>
+<td>推理成本翻倍</td>
+</tr>
+<tr>
+<td>✅ 针对分布做 LoRA 微调（KL 散度监督）</td>
+<td>系统性解决</td>
+<td>需要训练资源</td>
+</tr>
+</tbody></table>
+<p><strong>最朴素的建议</strong>：把 LLM 当成「会写字的助手」，而不是「骰子」。需要随机性时，让它写代码，让真正的 PRNG 干活。</p>
+<h2 id="七、结语：一面镜子"><a href="#七、结语：一面镜子" class="headerlink" title="七、结语：一面镜子"></a>七、结语：一面镜子</h2><p><img src="/2026/06/29/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E6%80%BB%E6%98%AF%E5%9B%9E%E7%AD%947/10.png" srcset="/img/loading.gif" lazyload></p>
+<p>回头看整个过程，最让我感慨的不是 AI 有多笨，而是它有多「诚实」。</p>
+<p><strong>LLM 输出 7 不是 bug，而是镜面效应 —— 它在忠实地把人类对「随机」的集体幻觉吐回来给我们。</strong> 7 在训练语料里被人类反复标记为「最像随机数的答案」，于是成了模型在该 prompt 下条件概率最高的 token。这是认知心理学（蓝七现象）+ 文化强化（Sheldon 73）+ 训练目标缺陷（mode collapse）三者叠加的必然结果。</p>
+<p>我们问 AI「为什么你总选 7」，其实是在问自己「为什么我们总以为 7 最随机」。</p>
+<p>AI 没有骗我们。它只是把我们的话听得太认真了。</p>
+<hr>
+<p><strong>主要参考文献</strong></p>
+<ul>
+<li>Coronado-Blázquez, J. (2025). <em>Deterministic or probabilistic? The psychology of LLMs as random number generators.</em> <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2502.19965">arXiv:2502.19965</a></li>
+<li>Zhao, M., Du, Y., Wang, M. (2026). <em>Large Language Models Are Bad Dice Players.</em> <a target="_blank" rel="noopener" href="https://preview.aclanthology.org/fetch-openreview-orcid/2026.acl-long.1051.pdf">ACL 2026</a></li>
+<li>Pomerance, C., Spicer, C. (2019). <em>Proof of the Sheldon Conjecture.</em> <a target="_blank" rel="noopener" href="https://www.math.dartmouth.edu/~carlp/sheldonresub011119.pdf">American Mathematical Monthly</a></li>
+<li>Kuriakose, S., Baldelli, D. (2026). <em>Training Language Models for Controlled Stochasticity.</em> <a target="_blank" rel="noopener" href="https://www.lesswrong.com/posts/upCrcE39aF63GoLJh/training-language-models-for-controlled-stochasticity-2">LessWrong</a></li>
+<li>Veritasium (2024). <em>Why is this number everywhere?</em> <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=d6iQrh2TK98">YouTube</a></li>
+<li>Fraser, C. (2023). <em>ChatGPT Is Hilariously Bad at Generating Random Numbers.</em> <a target="_blank" rel="noopener" href="https://futurism.com/the-byte/chatgpt-random-numbers">Futurism</a></li>
+<li>Gramener (2024). <em>LLM Numerology.</em> <a target="_blank" rel="noopener" href="https://blog.gramener.com/llm-favorite-number-experiment/">blog.gramener.com</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E8%83%A1%E6%80%9D%E4%B9%B1%E6%83%B3/" class="print-no-link">#胡思乱想</a>
+      
+        <a href="/tags/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/" class="print-no-link">#技术分享</a>
+      
+        <a href="/tags/AI/" class="print-no-link">#AI</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>为什么 AI 总是回答 7？一场关于 LLM 随机数偏见的考古</div>
+      <div>https://clever-max.github.io/2026/06/29/为什么AI总是回答7/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Imaginary_17</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年6月29日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/03/29/%E5%9F%BA%E4%BA%8E%E5%8A%A8%E4%BD%9C%E5%BD%95%E5%88%B6%E7%9A%84%E7%BD%91%E8%AF%BE%E8%87%AA%E5%8A%A8%E5%8A%A9%E6%89%8B/" title="基于动作录制的网课自动助手">
+                        <span class="hidden-mobile">基于动作录制的网课自动助手</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="waline"></div>
+  <script type="module">
+    Fluid.utils.loadComments('#waline', function() {
+      Fluid.utils.createCssLink('https://lib.baomitu.com/waline/3.6.0/waline.css')
+      import('https://lib.baomitu.com/waline/3.6.0/waline.js').then(({ init }) => {
+        var options = Object.assign(
+          {"serverURL":"https://mywebsitecomment-9em1g04df-clever-maxs-projects.vercel.app/","path":"window.location.pathname","meta":["nick","mail","link"],"requiredMeta":["nick"],"lang":"zh-CN","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"dark":"html[data-user-color-scheme=\"dark\"]","wordLimit":0,"pageSize":10},
+          {
+            el: '#waline',
+            path: window.location.pathname
+          }
+        )
+        init(options);
+        Fluid.utils.waitElementVisible('#waline .vcontent', () => {
+          var imgSelector = '#waline .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
