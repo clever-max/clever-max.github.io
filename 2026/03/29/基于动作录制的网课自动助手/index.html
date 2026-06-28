@@ -19,17 +19,18 @@
   <meta name="author" content="Imaginary_17">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一个关于技术与生活的博客">
+    <meta name="description" content="基于动作录制的网课自动助手 人的懒惰是技术进步的第一驱动力。当我第三次在同一门网课里手动点击同一个”下一节”按钮时，我觉得是时候让计算机替我受这个罪了。  起因：一个刷课人的自我修养事情要从一门让我昏昏欲睡的网课说起。每个视频都要手动点开、手动播放、手动等它放完，整套流程下来，我觉得自己不是在学知识，是在给鼠标做有氧运动。 于是我开始写自动化脚本。最初版本很粗糙 —— Selenium 驱动 Ed">
 <meta property="og:type" content="article">
 <meta property="og:title" content="基于动作录制的网课自动助手">
 <meta property="og:url" content="https://clever-max.github.io/2026/03/29/%E5%9F%BA%E4%BA%8E%E5%8A%A8%E4%BD%9C%E5%BD%95%E5%88%B6%E7%9A%84%E7%BD%91%E8%AF%BE%E8%87%AA%E5%8A%A8%E5%8A%A9%E6%89%8B/index.html">
 <meta property="og:site_name" content="Imaginary_17 的个人空间">
-<meta property="og:description" content="一个关于技术与生活的博客">
+<meta property="og:description" content="基于动作录制的网课自动助手 人的懒惰是技术进步的第一驱动力。当我第三次在同一门网课里手动点击同一个”下一节”按钮时，我觉得是时候让计算机替我受这个罪了。  起因：一个刷课人的自我修养事情要从一门让我昏昏欲睡的网课说起。每个视频都要手动点开、手动播放、手动等它放完，整套流程下来，我觉得自己不是在学知识，是在给鼠标做有氧运动。 于是我开始写自动化脚本。最初版本很粗糙 —— Selenium 驱动 Ed">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-03-29T02:12:38.000Z">
-<meta property="article:modified_time" content="2026-03-29T02:13:44.791Z">
+<meta property="article:modified_time" content="2026-06-28T10:19:12.104Z">
 <meta property="article:author" content="Imaginary_17">
 <meta property="article:tag" content="胡思乱想">
+<meta property="article:tag" content="技术分享">
 <meta name="twitter:card" content="summary_large_image">
   
   
@@ -305,7 +306,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          6.8k 字
         
       </span>
     
@@ -316,7 +317,7 @@
         
         
         
-          1 分钟
+          57 分钟
         
       </span>
     
@@ -360,7 +361,145 @@
             
               <div class="markdown-body">
                 
-                
+                <h1 id="基于动作录制的网课自动助手"><a href="#基于动作录制的网课自动助手" class="headerlink" title="基于动作录制的网课自动助手"></a>基于动作录制的网课自动助手</h1><blockquote>
+<p>人的懒惰是技术进步的第一驱动力。当我第三次在同一门网课里手动点击同一个”下一节”按钮时，我觉得是时候让计算机替我受这个罪了。</p>
+</blockquote>
+<h2 id="起因：一个刷课人的自我修养"><a href="#起因：一个刷课人的自我修养" class="headerlink" title="起因：一个刷课人的自我修养"></a>起因：一个刷课人的自我修养</h2><p>事情要从一门让我昏昏欲睡的网课说起。每个视频都要手动点开、手动播放、手动等它放完，整套流程下来，我觉得自己不是在学知识，是在给鼠标做有氧运动。</p>
+<p>于是我开始写自动化脚本。最初版本很粗糙 —— Selenium 驱动 Edge 浏览器，硬编码课程 URL，一个一个视频地点过去。能用，但仅限于雨课堂，仅限于一门课，换个课程就得改源码。这就像一把只能开一扇门的钥匙，换了门就废了。</p>
+<p>那个旧版长这样：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 硬编码，写死的课程 ID</span><br>COURSE_URL = <span class="hljs-string">&quot;https://www.yuketang.cn/v2/web/studentLog/26580508&quot;</span><br>CLASSROOM_ID = <span class="hljs-string">&quot;72633768&quot;</span><br>UNIVERSITY_ID = <span class="hljs-string">&quot;2622&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>每次换课都得进代码里改这些数字，比刷课还累。更糟糕的是，它严重依赖雨课堂的 DOM 结构 —— CSS 类名 <code>.chapter</code>、<code>.activity__wrap</code> 这些一旦改版，整个脚本当场去世。而且只能处理视频，遇到测验和文档直接跳过，仿佛在说”这题太难了我不做了”。</p>
+<p>经历了三个版本的小修小补（修 StaleElement、加倍速播放、加暂停检测），我意识到这条路走不通 —— <strong>靠硬编码定位元素，本质上就是在给网站打补丁，网站一更新你就得跟着改</strong>。</p>
+<p>我需要一种更通用的方案。</p>
+<h2 id="思路转变：从”替你操作”到”学你操作”"><a href="#思路转变：从”替你操作”到”学你操作”" class="headerlink" title="思路转变：从”替你操作”到”学你操作”"></a>思路转变：从”替你操作”到”学你操作”</h2><p>旧方案的核心问题是：<strong>我替程序决定点哪里</strong>。每个按钮的 XPath 都是我写死的，网站一改就失效。</p>
+<p>那如果反过来呢？<strong>让程序自己学会该点哪里</strong>？</p>
+<p>于是有了新方案的核心思路 —— <strong>录制-回放</strong>：</p>
+<ol>
+<li><strong>录制阶段</strong>：我像正常用户一样操作网课，浏览器扩展在后台记录每一步操作（点了哪里、输入了什么）</li>
+<li><strong>回放阶段</strong>：Python 程序读取录制结果，自动重放这些操作</li>
+</ol>
+<p>这就像”宏录制”—— 你做一遍，程序照着做无数遍。换课？重新录制一遍就行。换平台？也能用，因为录制的是你的操作，不是我对网站的假设。</p>
+<h2 id="架构：一录一放，两段式设计"><a href="#架构：一录一放，两段式设计" class="headerlink" title="架构：一录一放，两段式设计"></a>架构：一录一放，两段式设计</h2><p>整个项目分成两个独立的部分：</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">┌──────────────────┐         ┌──────────────────┐<br>│   浏览器扩展      │  <span class="hljs-keyword">JSON </span>  │   Python 回放引擎  │<br>│   (录制端)        │ ──────► │   (执行端)        │<br>│                  │  脚本   │                  │<br>│  Chrome <span class="hljs-keyword">Ext </span>V3   │         │  Playwright + Qt  │<br>└──────────────────┘         └──────────────────┘<br></code></pre></td></tr></table></figure>
+
+<h3 id="录制端：Chrome-扩展"><a href="#录制端：Chrome-扩展" class="headerlink" title="录制端：Chrome 扩展"></a>录制端：Chrome 扩展</h3><p>扩展基于 Manifest V3，核心就一个 <code>content.js</code>，注入到所有页面（包括 iframe），监听用户的点击和输入事件。</p>
+<p>每次用户点击一个按钮，扩展会为这个元素<strong>生成一组候选选择器</strong>，打包发送给 background script 存储。录制结束后，所有操作导出为一个 JSON 文件。</p>
+<h3 id="回放端：Python-桌面应用"><a href="#回放端：Python-桌面应用" class="headerlink" title="回放端：Python 桌面应用"></a>回放端：Python 桌面应用</h3><p>基于 Playwright（异步 API）+ PySide6 GUI。加载 JSON 脚本，启动浏览器，逐条回放操作。遇到视频自动等待播完，遇到 iframe 自动穿透，出错可以跳过或停止。</p>
+<p>同时提供了 CLI 和 GUI 两种使用方式 —— 命令行派和图形界面派都能找到自己的舒适区。</p>
+<h2 id="核心技术：7-层优先级智能定位"><a href="#核心技术：7-层优先级智能定位" class="headerlink" title="核心技术：7 层优先级智能定位"></a>核心技术：7 层优先级智能定位</h2><p>这是我自认为项目里最精彩的部分，也是 v2.0 最大的升级。</p>
+<p>旧版录制只会存一个 XPath，比如 <code>/html/body/div[2]/div[1]/div[3]/a[2]</code>。这种绝对路径脆得像饼干 —— 网页加个 <code>&lt;div&gt;</code> 包裹，或者换个顺序，XPath 就废了。</p>
+<p>新版的做法是：<strong>为每个元素同时生成多种定位方式，按稳定性从高到低排列，回放时依次尝试</strong>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// SmartSelectorBuilder 为一个按钮生成的选择器列表</span><br>selectors = [<br>  &#123; <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;id&quot;</span>,      <span class="hljs-attr">xpath</span>: <span class="hljs-string">&#x27;//*[@id=&quot;playBtn&quot;]&#x27;</span>,           <span class="hljs-attr">priority</span>: <span class="hljs-number">1</span> &#125;,  <span class="hljs-comment">// ID 最稳</span><br>  &#123; <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;text&quot;</span>,    <span class="hljs-attr">xpath</span>: <span class="hljs-string">&#x27;//span[contains(text(),&quot;播放&quot;)]&#x27;</span>, <span class="hljs-attr">priority</span>: <span class="hljs-number">2</span> &#125;,  <span class="hljs-comment">// 文本次之</span><br>  &#123; <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;aria&quot;</span>,    <span class="hljs-attr">xpath</span>: <span class="hljs-string">&#x27;//*[@aria-label=&quot;播放视频&quot;]&#x27;</span>,    <span class="hljs-attr">priority</span>: <span class="hljs-number">3</span> &#125;,  <span class="hljs-comment">// ARIA 属性</span><br>  &#123; <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;data&quot;</span>,    <span class="hljs-attr">xpath</span>: <span class="hljs-string">&#x27;//*[@data-action=&quot;play&quot;]&#x27;</span>,      <span class="hljs-attr">priority</span>: <span class="hljs-number">4</span> &#125;,  <span class="hljs-comment">// data-* 属性</span><br>  &#123; <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;class&quot;</span>,   <span class="hljs-attr">xpath</span>: <span class="hljs-string">&#x27;//button[contains(@class,&quot;vjs-big-play-button&quot;)]&#x27;</span>, <span class="hljs-attr">priority</span>: <span class="hljs-number">5</span> &#125;,  <span class="hljs-comment">// 语义类名</span><br>  &#123; <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;relative&quot;</span>,<span class="hljs-attr">xpath</span>: <span class="hljs-string">&#x27;//*[@id=&quot;toolbar&quot;]//div[2]//a&#x27;</span>, <span class="hljs-attr">priority</span>: <span class="hljs-number">6</span> &#125;,  <span class="hljs-comment">// 相对路径</span><br>  &#123; <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;full&quot;</span>,    <span class="hljs-attr">xpath</span>: <span class="hljs-string">&#x27;/html/body/div[2]/div[1]/a[3]&#x27;</span>, <span class="hljs-attr">priority</span>: <span class="hljs-number">7</span> &#125;,  <span class="hljs-comment">// 完整路径兜底</span><br>]<br></code></pre></td></tr></table></figure>
+
+<p>回放时，先试 ID 选择器 —— 找到了直接用，又快又准。找不到？试文本选择器。还找不到？继续往下试。完整 XPath 排在最后，是最不稳的兜底方案。</p>
+<p><strong>这就像找人的策略</strong>：先查身份证号（ID），再查姓名（文本），再查工位号（data 属性），最后查”左边第三个工位”（绝对路径）。前面的方式更稳定，后面的更通用。</p>
+<h3 id="CSS-类名稳定性过滤"><a href="#CSS-类名稳定性过滤" class="headerlink" title="CSS 类名稳定性过滤"></a>CSS 类名稳定性过滤</h3><p>有个细节值得说说。现代前端框架（React、Vue）生成的类名经常带着 hash，比如 <code>_1a2b3c4d</code>、<code>btn-8f3a21</code>。这些类名每次构建都可能变，拿来做选择器就是自寻死路。</p>
+<p>所以 <code>SmartSelectorBuilder</code> 在生成类名选择器时，做了三轮过滤：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> stableClasses = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">element</span>.<span class="hljs-property">classList</span>).<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">cls</span> =&gt;</span> &#123;<br>  <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/[a-f0-9]&#123;8,&#125;/i</span>.<span class="hljs-title function_">test</span>(cls)) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;  <span class="hljs-comment">// 排除 8 位以上 hex hash</span><br>  <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/\d&#123;5,&#125;/</span>.<span class="hljs-title function_">test</span>(cls))        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;  <span class="hljs-comment">// 排除 5 位以上长数字</span><br>  <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/^\d/</span>.<span class="hljs-title function_">test</span>(cls))           <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;  <span class="hljs-comment">// 排除数字开头</span><br>  <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;);<br></code></pre></td></tr></table></figure>
+
+<p>像 <code>vjs-big-play-button</code> 这种语义化类名留下，像 <code>_3f8a2b1c</code> 这种 hash 类名扔掉。简单粗暴但有效。</p>
+<h3 id="学习通的特殊关照"><a href="#学习通的特殊关照" class="headerlink" title="学习通的特殊关照"></a>学习通的特殊关照</h3><p>国内网课平台里，学习通（超星）是绕不开的。它的章节命名有规律可循 —— “1.1”、 “2.3” 这种编号格式。所以我给文本选择器加了个特殊识别：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// 识别学习通章节编号，如 &quot;1.1 概论&quot;</span><br><span class="hljs-keyword">if</span> (<span class="hljs-regexp">/^(\d+\.\d+)/</span>.<span class="hljs-title function_">test</span>(textContent)) &#123;<br>  <span class="hljs-comment">// 优先用章节号定位，比完整标题更稳定</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这属于针对特定平台的”开卷作弊”，但谁让学习通用户量最大呢。</p>
+<h2 id="回放引擎：快轮询-智能修复"><a href="#回放引擎：快轮询-智能修复" class="headerlink" title="回放引擎：快轮询 + 智能修复"></a>回放引擎：快轮询 + 智能修复</h2><h3 id="两阶段快速轮询"><a href="#两阶段快速轮询" class="headerlink" title="两阶段快速轮询"></a>两阶段快速轮询</h3><p>旧版定位元素的方式很暴力 —— 第一个选择器超时了再试下一个。如果一个页面有 7 个候选选择器，每个超时 10 秒，最坏情况等 70 秒才报错。</p>
+<p>新版改成了<strong>并行轮询</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">_safe_wait_then_click</span>(<span class="hljs-params">self, locators, ...</span>):<br>    <span class="hljs-comment"># 阶段1：10秒内，每0.5秒轮询所有定位器</span><br>    <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(poll_count):<br>        <span class="hljs-keyword">for</span> locator <span class="hljs-keyword">in</span> locators:<br>            <span class="hljs-keyword">if</span> <span class="hljs-keyword">await</span> locator.is_visible():<br>                <span class="hljs-keyword">await</span> locator.click()<br>                <span class="hljs-keyword">return</span>  <span class="hljs-comment"># 找到了，直接点击</span><br>        <span class="hljs-keyword">await</span> asyncio.sleep(<span class="hljs-number">0.5</span>)<br><br>    <span class="hljs-comment"># 阶段2：轮询超时，用首个定位器做长等待</span><br>    <span class="hljs-keyword">await</span> locators[<span class="hljs-number">0</span>].wait_for(state=<span class="hljs-string">&quot;visible&quot;</span>, timeout=...)<br>    <span class="hljs-keyword">await</span> locators[<span class="hljs-number">0</span>].click()<br></code></pre></td></tr></table></figure>
+
+<p>所有选择器同时”抢”着去匹配，谁先找到谁先上。实际体验中，大部分情况下 1 秒内就能定位成功。</p>
+<h3 id="XPath-智能修复"><a href="#XPath-智能修复" class="headerlink" title="XPath 智能修复"></a>XPath 智能修复</h3><p>即使有 7 层选择器，总有时候还是会遇到 DOM 微调。比如网站加了个 <code>&lt;a&gt;</code> 包裹，原来 <code>/div[2]/a</code> 变成了 <code>/div[2]/a/a</code>。这种小变化不值得重新录制，所以回放引擎内置了 4 条 XPath 修复规则：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 规则1：补上可能缺失的 &lt;a&gt; 元素</span><br><span class="hljs-string">&quot;/div[2]&quot;</span> → <span class="hljs-string">&quot;/div[2]/a[1]&quot;</span><br><br><span class="hljs-comment"># 规则2：补上可能缺失的索引</span><br><span class="hljs-string">&quot;/div[2]/a&quot;</span> → <span class="hljs-string">&quot;/div[2]/a[1]&quot;</span><br><br><span class="hljs-comment"># 规则3：去掉索引试试（DOM 顺序可能变了）</span><br><span class="hljs-string">&quot;/div[2]/a[1]&quot;</span> → <span class="hljs-string">&quot;/div[2]/a&quot;</span><br><br><span class="hljs-comment"># 规则4：绝对路径简化为相对路径（减少对 DOM 层级的依赖）</span><br><span class="hljs-string">&quot;/html/body[1]/div[1]&quot;</span> → <span class="hljs-string">&quot;//body//div[1]&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>这四条规则覆盖了学习通平台最常见的 DOM 变化模式。不是通用解法，但够用。工程就是这样 —— 不追求完美，追求省心。</p>
+<h2 id="跨域-iframe：网课平台的终极折磨"><a href="#跨域-iframe：网课平台的终极折磨" class="headerlink" title="跨域 iframe：网课平台的终极折磨"></a>跨域 iframe：网课平台的终极折磨</h2><p>国内网课平台特别喜欢用 iframe 嵌入视频，而且经常是<strong>跨域</strong>的 —— 主页面在 <code>mooc1.chaoxing.com</code>，视频在 <code>mooc1-2.chaoxing.com</code>。这给录制和回放都带来了麻烦。</p>
+<h3 id="录制端"><a href="#录制端" class="headerlink" title="录制端"></a>录制端</h3><p><code>content.js</code> 设置了 <code>&quot;all_frames&quot;: true</code>，所以 iframe 内的操作也能被捕获。但获取 iframe 路径时，跨域 iframe 无法访问 <code>parent.document</code>：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-title function_">getIframePath</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-keyword">try</span> &#123;<br>    <span class="hljs-keyword">const</span> parent = <span class="hljs-variable language_">window</span>.<span class="hljs-property">parent</span>;<br>    <span class="hljs-comment">// 跨域时访问 parent.document 会抛异常</span><br>    parent.<span class="hljs-property">document</span>;  <span class="hljs-comment">// 触发跨域检查</span><br>  &#125; <span class="hljs-keyword">catch</span> (e) &#123;<br>    <span class="hljs-comment">// 标记为跨域 iframe，回放时用特殊策略处理</span><br>    path.<span class="hljs-title function_">unshift</span>(<span class="hljs-string">&quot;__cross_origin_iframe__&quot;</span>);<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="回放端"><a href="#回放端" class="headerlink" title="回放端"></a>回放端</h3><p>Playwright 有个好处 —— 它能访问所有 frame 的 URL，不受同源策略限制。所以回放时通过比较域名来定位跨域 iframe：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">_handle_cross_origin_iframe</span>(<span class="hljs-params">self, page, ...</span>):<br>    <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">5</span>):  <span class="hljs-comment"># 最多重试 5 次</span><br>        <span class="hljs-keyword">for</span> frame <span class="hljs-keyword">in</span> page.frames:<br>            <span class="hljs-keyword">if</span> frame.url <span class="hljs-keyword">and</span> <span class="hljs-keyword">not</span> frame.url.startswith(main_domain):<br>                <span class="hljs-keyword">return</span> frame  <span class="hljs-comment"># 域名不同的就是跨域 iframe</span><br>        <span class="hljs-keyword">await</span> asyncio.sleep(<span class="hljs-number">2</span>)<br></code></pre></td></tr></table></figure>
+
+<p>最多等 10 秒、重试 5 次。对于学习通那种视频 iframe 加载比较慢的平台，这个耐心是必要的。</p>
+<h2 id="视频检测：不是所有点击都值得等"><a href="#视频检测：不是所有点击都值得等" class="headerlink" title="视频检测：不是所有点击都值得等"></a>视频检测：不是所有点击都值得等</h2><p>回放时遇到一个点击操作，怎么判断它是不是”点开视频”？如果误判，要么傻等一个不存在的视频（浪费时间），要么错过视频播放（操作不完整）。</p>
+<p>我的方案是<strong>双重判断</strong>：</p>
+<ol>
+<li><strong>静态判断</strong>：看选择器的特征 —— 包含 <code>video</code>、<code>play</code>、<code>vjs</code>、<code>ananas</code>（学习通视频特征路径）等关键字，或者 <code>selectorType</code> 标记为 <code>video-button</code></li>
+<li><strong>动态判断</strong>：点击后，在 8 秒内轮询所有 frame，检测是否有 <code>&lt;video&gt;</code> 元素开始播放</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// 在浏览器中执行，检测是否有视频正在播放</span><br><span class="hljs-keyword">const</span> videos = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">from</span>(<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&quot;video&quot;</span>));<br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> v <span class="hljs-keyword">of</span> videos) &#123;<br>  <span class="hljs-keyword">if</span> (!v.<span class="hljs-property">paused</span> &amp;&amp; !v.<span class="hljs-property">ended</span> &amp;&amp; v.<span class="hljs-property">currentTime</span> &gt; <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>如果 8 秒内检测到视频开始，就自动进入”等视频播完”模式，每秒检查 <code>ended</code> 状态直到完成。如果 8 秒内没有视频开始，就当作普通点击继续下一步。</p>
+<p>这套逻辑的关键是<strong>超时不能太长</strong> —— 你不想因为一个普通按钮点击而白白等 30 秒吧。</p>
+<h2 id="全异步架构与-GUI-桥接"><a href="#全异步架构与-GUI-桥接" class="headerlink" title="全异步架构与 GUI 桥接"></a>全异步架构与 GUI 桥接</h2><p>回放引擎全程 <code>asyncio</code>，但 GUI 是 Qt 的事件循环，两者天然冲突。解决方案是用 <code>asyncio.to_thread()</code> 做桥接：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">WorkerThread</span>(<span class="hljs-title class_ inherited__">QThread</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">run</span>(<span class="hljs-params">self</span>):<br>        asyncio.run(<span class="hljs-variable language_">self</span>.engine.run())  <span class="hljs-comment"># asyncio 事件循环在子线程</span><br><br><span class="hljs-comment"># 引擎等待用户手动登录完成时</span><br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">_wait_for_gui_continue</span>(<span class="hljs-params">self</span>):<br>    <span class="hljs-variable language_">self</span>.login_ready_signal.emit()  <span class="hljs-comment"># 通知 GUI 显示&quot;继续&quot;按钮</span><br>    <span class="hljs-keyword">await</span> asyncio.to_thread(<span class="hljs-variable language_">self</span>._login_continue_event.wait)  <span class="hljs-comment"># 阻塞等待 Qt 事件</span><br></code></pre></td></tr></table></figure>
+
+<p>Qt 那边用户点”继续”按钮 → <code>threading.Event.set()</code> → asyncio 这边解除阻塞 → 引擎继续执行。两个事件循环通过 <code>threading.Event</code> 这个最朴素的同步原语握手，大道至简。</p>
+<h2 id="打包：一场与-PyInstaller-的搏斗"><a href="#打包：一场与-PyInstaller-的搏斗" class="headerlink" title="打包：一场与 PyInstaller 的搏斗"></a>打包：一场与 PyInstaller 的搏斗</h2><p>把 Python 项目打包成 exe 的过程，就像跟一个脾气不好的合作者谈判 —— 它总能在你最意想不到的地方给你找麻烦。</p>
+<p>最坑的一个问题：<code>typing</code> 和 <code>pathlib</code> 这两个包。Python 3.9 已经内置了它们，但 PyPI 上还有旧版的 backport 包。如果用户的 Python 环境里装了这些 backport，PyInstaller 打包时会优先用 PyPI 版本而非内置版本，然后运行时就炸了。</p>
+<p>所以在构建脚本里专门加了一步清理：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs powershell">pip uninstall <span class="hljs-literal">-y</span> typing pathlib <span class="hljs-number">2</span>&gt;<span class="hljs-variable">$null</span><br></code></pre></td></tr></table></figure>
+
+<p>一个小小的 <code>pip uninstall</code>，省去了无数”打包成功但运行报错”的深夜 debug。</p>
+<h2 id="新旧对比：到底进步了多少"><a href="#新旧对比：到底进步了多少" class="headerlink" title="新旧对比：到底进步了多少"></a>新旧对比：到底进步了多少</h2><table>
+<thead>
+<tr>
+<th></th>
+<th>旧版（雨课堂专用）</th>
+<th>新版（录制-回放通用）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>适用范围</strong></td>
+<td>仅雨课堂</td>
+<td>任意网课平台</td>
+</tr>
+<tr>
+<td><strong>换课成本</strong></td>
+<td>改源码</td>
+<td>重新录制一次</td>
+</tr>
+<tr>
+<td><strong>定位策略</strong></td>
+<td>单一 XPath（硬编码）</td>
+<td>7 层优先级候选选择器</td>
+</tr>
+<tr>
+<td><strong>DOM 容错</strong></td>
+<td>无</td>
+<td>XPath 智能修复（4 条规则）</td>
+</tr>
+<tr>
+<td><strong>iframe 支持</strong></td>
+<td>无</td>
+<td>跨域 iframe 自动识别与穿透</td>
+</tr>
+<tr>
+<td><strong>视频检测</strong></td>
+<td>轮询完成度文本</td>
+<td>JS 注入检测 <code>&lt;video&gt;</code> 属性</td>
+</tr>
+<tr>
+<td><strong>GUI</strong></td>
+<td>无</td>
+<td>PySide6 桌面应用</td>
+</tr>
+<tr>
+<td><strong>打包</strong></td>
+<td>无</td>
+<td>PyInstaller 一键构建</td>
+</tr>
+</tbody></table>
+<p>从”只能开一扇门的钥匙”进化到了”万能钥匙坯 —— 你拿它去比划一下锁的形状，它就能复制出对应的钥匙”。</p>
+<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><ol>
+<li><strong>安装浏览器扩展</strong>：Chrome 打开 <code>chrome://extensions/</code>，开启开发者模式，加载 <code>extension1</code> 文件夹</li>
+<li><strong>录制操作</strong>：打开网课页面，点击扩展图标 → 开始录制，像正常一样操作网课，完成后停止录制，保存 JSON 文件</li>
+<li><strong>回放</strong>：运行 Python 应用，选择 JSON 脚本，点击开始 —— 程序会自动打开浏览器、等待你登录，然后忠实地重放你录制的每一步操作</li>
+</ol>
+<p>源码地址：<a target="_blank" rel="noopener" href="https://github.com/clever-max/Course_Through_Record">Course_Through_Record</a></p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>这个项目最初只是一个不想手动刷课的懒人写的脚本，最后演变成了一个”录制-回放”的通用框架。过程中最深的体会是：<strong>与其让程序适配网站，不如让程序适配人</strong>。网站千变万化，但人的操作习惯是稳定的 —— 人点按钮就是点按钮，不会因为网站改版就换个操作方式。</p>
+<p>所以，把人的操作记录下来再回放，本质上是用”人的适应性”来对抗”网站的不确定性”。这不是什么高深的设计哲学，只是一个刷课刷烦了的人想出来的偷懒办法而已。</p>
+<p>但话说回来，人类文明的大多数发明，不都是从偷懒开始的吗？</p>
+
                 
               </div>
             
@@ -373,6 +512,8 @@
       <i class="iconfont icon-tags"></i>
       
         <a href="/tags/%E8%83%A1%E6%80%9D%E4%B9%B1%E6%83%B3/" class="print-no-link">#胡思乱想</a>
+      
+        <a href="/tags/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/" class="print-no-link">#技术分享</a>
       
     </div>
   
