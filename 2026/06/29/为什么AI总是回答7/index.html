@@ -19,12 +19,12 @@
   <meta name="author" content="Imaginary_17">
   <meta name="keywords" content="">
   
-    <meta name="description" content=".markdown-body table {   border-collapse: separate !important;   border-spacing: 0;   margin: 20px auto !important;   border: 2px solid #333;   border-radius: 8px;   overflow: hidden;   font-size: 14">
+    <meta name="description" content="&#x2F;* &#x3D;&#x3D;&#x3D; 统一表格样式（适配深色模式） &#x3D;&#x3D;&#x3D; *&#x2F; .markdown-body table {   border-collapse: separate !important;   border-spacing: 0;   margin: 20px auto !important;   border: 2px solid var(--sec-text-color);   border-ra">
 <meta property="og:type" content="article">
 <meta property="og:title" content="为什么 AI 总是回答 7？一场关于 LLM 随机数偏见的考古">
 <meta property="og:url" content="https://clever-max.github.io/2026/06/29/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E6%80%BB%E6%98%AF%E5%9B%9E%E7%AD%947/index.html">
 <meta property="og:site_name" content="Imaginary_17 的个人空间">
-<meta property="og:description" content=".markdown-body table {   border-collapse: separate !important;   border-spacing: 0;   margin: 20px auto !important;   border: 2px solid #333;   border-radius: 8px;   overflow: hidden;   font-size: 14">
+<meta property="og:description" content="&#x2F;* &#x3D;&#x3D;&#x3D; 统一表格样式（适配深色模式） &#x3D;&#x3D;&#x3D; *&#x2F; .markdown-body table {   border-collapse: separate !important;   border-spacing: 0;   margin: 20px auto !important;   border: 2px solid var(--sec-text-color);   border-ra">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://clever-max.github.io/2026/06/29/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E6%80%BB%E6%98%AF%E5%9B%9E%E7%AD%947/1.png">
 <meta property="og:image" content="https://clever-max.github.io/2026/06/29/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E6%80%BB%E6%98%AF%E5%9B%9E%E7%AD%947/4+1.png">
@@ -36,7 +36,7 @@
 <meta property="og:image" content="https://clever-max.github.io/2026/06/29/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E6%80%BB%E6%98%AF%E5%9B%9E%E7%AD%947/8.png">
 <meta property="og:image" content="https://clever-max.github.io/2026/06/29/%E4%B8%BA%E4%BB%80%E4%B9%88AI%E6%80%BB%E6%98%AF%E5%9B%9E%E7%AD%947/10.png">
 <meta property="article:published_time" content="2026-06-28T19:30:00.000Z">
-<meta property="article:modified_time" content="2026-06-28T19:36:45.393Z">
+<meta property="article:modified_time" content="2026-06-28T19:48:52.992Z">
 <meta property="article:author" content="Imaginary_17">
 <meta property="article:tag" content="胡思乱想">
 <meta property="article:tag" content="AI">
@@ -317,7 +317,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          7.2k 字
+          9.8k 字
         
       </span>
     
@@ -328,7 +328,7 @@
         
         
         
-          61 分钟
+          83 分钟
         
       </span>
     
@@ -373,20 +373,21 @@
               <div class="markdown-body">
                 
                 <style>
+/* === 统一表格样式（适配深色模式） === */
 .markdown-body table {
   border-collapse: separate !important;
   border-spacing: 0;
   margin: 20px auto !important;
-  border: 2px solid #333;
+  border: 2px solid var(--sec-text-color);
   border-radius: 8px;
   overflow: hidden;
   font-size: 14px;
-  width: auto;
+  width: fit-content;
   max-width: 100%;
 }
 .markdown-body table th {
-  background: #f0f0f0 !important;
-  border-bottom: 2px solid #333;
+  background: var(--inlinecode-bg-color) !important;
+  border-bottom: 2px solid var(--sec-text-color);
   padding: 10px 16px;
   text-align: center;
   font-weight: bold;
@@ -394,13 +395,123 @@
 .markdown-body table td {
   padding: 10px 16px;
   text-align: center;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--line-color);
 }
 .markdown-body table tr:last-child td {
   border-bottom: none;
 }
 .markdown-body table tr:nth-child(even) td {
-  background: #fafafa;
+  background: rgba(128, 128, 128, 0.05);
+}
+
+/* === 73 数学性质卡片 === */
+.sheldon-card {
+  border: 2px solid var(--sec-text-color);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px auto;
+  background: var(--inlinecode-bg-color);
+}
+.sheldon-title {
+  text-align: center;
+  color: var(--post-text-color);
+  margin-top: 0;
+}
+.sheldon-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 15px;
+}
+.sheldon-item {
+  flex: 1;
+  min-width: 260px;
+  background: var(--board-bg-color);
+  padding: 15px;
+  border-radius: 4px;
+}
+.sheldon-item.blue { border-left: 4px solid #4a90e2; }
+.sheldon-item.green { border-left: 4px solid #50c878; }
+.sheldon-label {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.sheldon-label.blue { color: #4a90e2; }
+.sheldon-label.green { color: #50c878; }
+.sheldon-mono {
+  font-family: monospace;
+  font-size: 14px;
+  line-height: 2;
+  color: var(--post-text-color);
+}
+.sheldon-arrow {
+  text-align: center;
+  color: var(--sec-text-color);
+  font-size: 20px;
+  font-family: monospace;
+  margin: 4px 0;
+}
+.sheldon-note {
+  color: var(--sec-text-color);
+  font-size: 12px;
+  margin-top: 8px;
+}
+.sheldon-proof {
+  text-align: center;
+  margin-top: 15px;
+  padding: 10px;
+  background: rgba(255, 193, 7, 0.12);
+  border-radius: 4px;
+  color: var(--post-text-color);
+  font-size: 13px;
+}
+.sheldon-red { color: #d73a49; font-weight: bold; }
+
+/* === 6 模型对照表着色 === */
+.cell-blue {
+  background: rgba(33, 150, 243, 0.12);
+  color: #1565c0;
+  font-weight: bold;
+  font-size: 18px;
+}
+.cell-orange {
+  background: rgba(255, 152, 0, 0.12);
+  color: #e65100;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+/* === 深色模式：手动切换 === */
+[data-user-color-scheme="dark"] .cell-blue {
+  background: rgba(33, 150, 243, 0.22);
+  color: #64b5f6;
+}
+[data-user-color-scheme="dark"] .cell-orange {
+  background: rgba(255, 152, 0, 0.22);
+  color: #ffb74d;
+}
+[data-user-color-scheme="dark"] .sheldon-item.blue { border-left-color: #64b5f6; }
+[data-user-color-scheme="dark"] .sheldon-item.green { border-left-color: #81c784; }
+[data-user-color-scheme="dark"] .sheldon-label.blue { color: #64b5f6; }
+[data-user-color-scheme="dark"] .sheldon-label.green { color: #81c784; }
+[data-user-color-scheme="dark"] .sheldon-red { color: #ef5350; }
+
+/* === 深色模式：跟随系统（未手动设置时） === */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-user-color-scheme]) .cell-blue {
+    background: rgba(33, 150, 243, 0.22);
+    color: #64b5f6;
+  }
+  :root:not([data-user-color-scheme]) .cell-orange {
+    background: rgba(255, 152, 0, 0.22);
+    color: #ffb74d;
+  }
+  :root:not([data-user-color-scheme]) .sheldon-item.blue { border-left-color: #64b5f6; }
+  :root:not([data-user-color-scheme]) .sheldon-item.green { border-left-color: #81c784; }
+  :root:not([data-user-color-scheme]) .sheldon-label.blue { color: #64b5f6; }
+  :root:not([data-user-color-scheme]) .sheldon-label.green { color: #81c784; }
+  :root:not([data-user-color-scheme]) .sheldon-red { color: #ef5350; }
 }
 </style>
 
@@ -492,25 +603,25 @@
 </blockquote>
 <p>2019 年，Dartmouth 的 Carl Pomerance 和 Spicer 在《美国数学月刊》上发表了 <a target="_blank" rel="noopener" href="https://www.math.dartmouth.edu/~carlp/sheldonresub011119.pdf">Proof of the Sheldon Conjecture</a>，<strong>正式证明了 73 是唯一的 Sheldon 质数</strong>。</p>
 <p>下面用 HTML 把这两个性质画出来，比 AI 生成的图更清晰：</p>
-<div style="border:2px solid #333;border-radius:8px;padding:20px;margin:20px auto;max-width:700px;background:#fafafa;">
-<h4 style="text-align:center;color:#333;margin-top:0;">73 的两种数学性质</h4>
-<div style="display:flex;flex-wrap:wrap;gap:20px;justify-content:center;margin-top:15px;">
-<div style="flex:1;min-width:260px;background:white;border-left:4px solid #4a90e2;padding:15px;border-radius:4px;">
-<div style="font-weight:bold;color:#4a90e2;margin-bottom:10px;">① 镜像性 (Mirror Property)</div>
-<div style="font-family:monospace;font-size:14px;line-height:2;">第 <b style="color:#d73a49;">21</b> 个质数 = <b style="color:#d73a49;">73</b></div>
-<div style="text-align:center;color:#999;font-size:20px;font-family:monospace;margin:4px 0;">⇅ 镜像反转</div>
-<div style="font-family:monospace;font-size:14px;line-height:2;">第 <b style="color:#d73a49;">12</b> 个质数 = <b style="color:#d73a49;">37</b></div>
-<div style="color:#666;font-size:12px;margin-top:8px;">21 ↔ 12, 73 ↔ 37 同时互为镜像</div>
+<div class="sheldon-card">
+<h4 class="sheldon-title">73 的两种数学性质</h4>
+<div class="sheldon-row">
+<div class="sheldon-item blue">
+<div class="sheldon-label blue">① 镜像性 (Mirror Property)</div>
+<div class="sheldon-mono">第 <span class="sheldon-red">21</span> 个质数 = <span class="sheldon-red">73</span></div>
+<div class="sheldon-arrow">⇅ 镜像反转</div>
+<div class="sheldon-mono">第 <span class="sheldon-red">12</span> 个质数 = <span class="sheldon-red">37</span></div>
+<div class="sheldon-note">21 ↔ 12, 73 ↔ 37 同时互为镜像</div>
 </div>
-<div style="flex:1;min-width:260px;background:white;border-left:4px solid #50c878;padding:15px;border-radius:4px;">
-<div style="font-weight:bold;color:#50c878;margin-bottom:10px;">② 积性 (Product Property)</div>
-<div style="font-family:monospace;font-size:14px;line-height:2;">质数 <b style="color:#d73a49;">73</b> 的位数之积：</div>
-<div style="text-align:center;font-size:20px;margin:8px 0;font-family:monospace;"><b style="color:#d73a49;">7</b> × <b style="color:#d73a49;">3</b> = <b style="color:#d73a49;">21</b></div>
-<div style="font-family:monospace;font-size:14px;line-height:2;">而 73 恰好是第 <b style="color:#d73a49;">21</b> 个质数 ✓</div>
-<div style="color:#666;font-size:12px;margin-top:8px;">位数乘积 = 该质数在质数序列中的索引</div>
+<div class="sheldon-item green">
+<div class="sheldon-label green">② 积性 (Product Property)</div>
+<div class="sheldon-mono">质数 <span class="sheldon-red">73</span> 的位数之积：</div>
+<div class="sheldon-mono" style="text-align:center;font-size:20px;margin:8px 0;"><span class="sheldon-red">7</span> × <span class="sheldon-red">3</span> = <span class="sheldon-red">21</span></div>
+<div class="sheldon-mono">而 73 恰好是第 <span class="sheldon-red">21</span> 个质数 ✓</div>
+<div class="sheldon-note">位数乘积 = 该质数在质数序列中的索引</div>
 </div>
 </div>
-<div style="text-align:center;margin-top:15px;padding:10px;background:#fff3cd;border-radius:4px;color:#856404;font-size:13px;">🏆 2019 年 Pomerance & Spicer 证明：<b>73 是唯一同时满足这两条性质的质数</b></div>
+<div class="sheldon-proof">🏆 2019 年 Pomerance & Spicer 证明：<b>73 是唯一同时满足这两条性质的质数</b></div>
 </div>
 
 <p>这意味着 73 在数学上确实「特殊」。《生活大爆炸》又是全球收视率顶级的美剧，互联网语料里 73 &#x2F; 37 &#x2F; 7 的密度被反复强化，LLM 学到的概率分布也就被进一步推高。<strong>人类的文化偏见被数学证明了独特性，又被电视剧放大了传播量，最后被语言模型固化进参数 —— 一条完美的偏见强化回路。</strong></p>
@@ -545,18 +656,18 @@
 <tr><th>模型</th><th>开发商</th><th>第一轮回答</th><th>暗示的文化来源</th></tr>
 </thead>
 <tbody>
-<tr><td>Claude Sonnet 4.6</td><td>Anthropic</td><td style="background:#e3f2fd;color:#1565c0;font-weight:bold;font-size:18px;">42</td><td>《银河系漫游指南》</td></tr>
-<tr><td>Gemini Pro</td><td>Google</td><td style="background:#e3f2fd;color:#1565c0;font-weight:bold;font-size:18px;">42</td><td>《银河系漫游指南》</td></tr>
-<tr><td>DeepSeek</td><td>DeepSeek AI</td><td style="background:#e3f2fd;color:#1565c0;font-weight:bold;font-size:18px;">42</td><td>《银河系漫游指南》</td></tr>
-<tr><td>GLM-5.1</td><td>Zhipu AI</td><td style="background:#e3f2fd;color:#1565c0;font-weight:bold;font-size:18px;">42</td><td>《银河系漫游指南》</td></tr>
-<tr><td>Copilot</td><td>Microsoft / OpenAI</td><td style="background:#fff3e0;color:#e65100;font-weight:bold;font-size:18px;">73</td><td>《生活大爆炸》Sheldon</td></tr>
-<tr><td>Grok</td><td>xAI</td><td style="background:#fff3e0;color:#e65100;font-weight:bold;font-size:18px;">73</td><td>《生活大爆炸》Sheldon</td></tr>
+<tr><td>Claude Sonnet 4.6</td><td>Anthropic</td><td class="cell-blue">42</td><td>《银河系漫游指南》</td></tr>
+<tr><td>Gemini Pro</td><td>Google</td><td class="cell-blue">42</td><td>《银河系漫游指南》</td></tr>
+<tr><td>DeepSeek</td><td>DeepSeek AI</td><td class="cell-blue">42</td><td>《银河系漫游指南》</td></tr>
+<tr><td>GLM-5.1</td><td>Zhipu AI</td><td class="cell-blue">42</td><td>《银河系漫游指南》</td></tr>
+<tr><td>Copilot</td><td>Microsoft / OpenAI</td><td class="cell-orange">73</td><td>《生活大爆炸》Sheldon</td></tr>
+<tr><td>Grok</td><td>xAI</td><td class="cell-orange">73</td><td>《生活大爆炸》Sheldon</td></tr>
 </tbody>
 </table>
 </div>
 
-<p style="text-align:center;color:#666;font-size:13px;margin-top:-10px;">
-  🔵 <span style="color:#1565c0;">42 阵营</span>：训练数据偏向开发者社区 &nbsp;&nbsp;|&nbsp;&nbsp; 🟠 <span style="color:#e65100;">73 阵营</span>：训练数据偏向更主流的互联网
+<p style="text-align:center;color:var(--sec-text-color);font-size:13px;margin-top:-10px;">
+  🔵 <span class="cell-blue" style="font-size:inherit;font-weight:normal;background:transparent;">42 阵营</span>：训练数据偏向开发者社区 &nbsp;&nbsp;|&nbsp;&nbsp; 🟠 <span class="cell-orange" style="font-size:inherit;font-weight:normal;background:transparent;">73 阵营</span>：训练数据偏向更主流的互联网
 </p>
 
 <p><strong>模型选哪个数，几乎可以反推它的训练数据更偏向开发者社区还是更大众互联网</strong> —— 这相当于不接触模型权重就能做训练数据的 OSINT（开源情报分析）。</p>
